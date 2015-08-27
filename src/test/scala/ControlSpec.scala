@@ -69,22 +69,49 @@ class ControlSpec extends FlatSpec with Matchers with BeforeAndAfter {
     assert(west == MovementResult.LIMIT)
   }
 
-  it should "return OK when bottom is lower number" in {
+  it should "return OK when left is lower number" in {
     val control: Control = Control(0, 1,
       Array(Array(1, 2, 3)))
+    assert(control.getCurrentNumber == 2)
+    val west: MovementResult.Value = control.goWest()
+    assert(west == MovementResult.OK)
     assert(control.getCurrentNumber == 1)
-    val north: MovementResult.Value = control.goWest()
-    assert(north == MovementResult.OK)
-    assert(control.getCurrentNumber == 0)
     assert(control.getMarks().size == 2)
   }
 
-  it should "return NOT_OK when bottom is higher number" in {
+  it should "return NOT_OK when left is higher number" in {
     val control: Control = Control(0, 1,
-      Array(Array(1, 2, 3)))
-    assert(control.getCurrentNumber == 0)
-    val north: MovementResult.Value = control.goWest()
-    assert(north == MovementResult.NOT_OK)
-    assert(control.getCurrentNumber == 0)
+      Array(Array(2, 1, 3)))
+    assert(control.getCurrentNumber == 1)
+    val west: MovementResult.Value = control.goWest()
+    assert(west == MovementResult.NOT_OK)
+    assert(control.getCurrentNumber == 1)
+  }
+
+  behavior of "a Control East"
+
+  it should "LIMIT it self when at right most" in {
+    val control: Control = Control(0, 2, Array(Array(1, 2, 3)))
+    val east: MovementResult.Value = control.goEast()
+    assert(east == MovementResult.LIMIT)
+  }
+
+  it should "return OK when right is lower number" in {
+    val control: Control = Control(0, 1,
+      Array(Array(1, 2, 1)))
+    assert(control.getCurrentNumber == 2)
+    val east: MovementResult.Value = control.goEast()
+    assert(east == MovementResult.OK)
+    assert(control.getCurrentNumber == 1)
+    assert(control.getMarks().size == 2)
+  }
+
+  it should "return NOT_OK when right is higher number" in {
+    val control: Control = Control(0, 1,
+      Array(Array(2, 1, 3)))
+    assert(control.getCurrentNumber == 1)
+    val east: MovementResult.Value = control.goEast()
+    assert(east == MovementResult.NOT_OK)
+    assert(control.getCurrentNumber == 1)
   }
 }
