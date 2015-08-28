@@ -10,23 +10,26 @@ object MovementResult extends Enumeration {
   val OK, NOT_OK, LIMIT = Value
 }
 
+object Input {
+  var grid: Array[Array[Int]] = Array[Array[Int]]()
+}
+
 class Control {
   private var pointer = (0, 0)
   private var currentNumber: Int = 0;
-  private var input: Array[Array[Int]] = Array[Array[Int]]()
   private var marks: Vector[String] = Vector[String]()
 
   def getPointer() : (Int, Int) = pointer
   def setPointer(x: Int, y: Int): Unit = {
     pointer = (x, y)
     println(s"setPointer x: ${x}")
-    currentNumber = input(pointer._1)(pointer._2)
+    currentNumber = Input.grid(pointer._1)(pointer._2)
     marks = marks :+ s"${pointer._1}-${pointer._2}"
   }
   def getCurrentNumber() = currentNumber
   def getMarks() = marks
 
-  def goNorth() = {
+  def checkNorth() = {
     val x = pointer._1
 
     if (x == 0) {
@@ -35,7 +38,6 @@ class Control {
       println(s"x: ${x}")
       check(x - 1, pointer._2) match {
         case Some(num) if (num < currentNumber) => {
-          setPointer(x - 1, pointer._2)
           MovementResult.OK
         }
         case _ => MovementResult.NOT_OK
@@ -44,16 +46,15 @@ class Control {
     }
   }
 
-  def goSouth() = {
+  def checkSouth() = {
     val x = pointer._1
 
-    if (x == input.length - 1) {
+    if (x == Input.grid.length - 1) {
       MovementResult.LIMIT
     } else {
 
       check(x + 1, pointer._2) match {
         case Some(num) if (num < currentNumber) => {
-          setPointer(x + 1, pointer._2)
           MovementResult.OK
         }
         case _ => MovementResult.NOT_OK
@@ -62,7 +63,7 @@ class Control {
     }
   }
 
-  def goWest() = {
+  def checkWest() = {
     val y = pointer._2
 
     if (y == 0) {
@@ -71,7 +72,6 @@ class Control {
 
       check(pointer._1, y - 1) match {
         case Some(num) if (num < currentNumber) => {
-          setPointer(pointer._1, y - 1)
           MovementResult.OK
         }
         case _ => MovementResult.NOT_OK
@@ -80,16 +80,15 @@ class Control {
     }
   }
 
-  def goEast() = {
+  def checkEast() = {
     val y = pointer._2
 
-    if (y == input(pointer._1).length - 1) {
+    if (y == Input.grid(pointer._1).length - 1) {
       MovementResult.LIMIT
     } else {
 
       check(pointer._1, y + 1) match {
         case Some(num) if (num < currentNumber) => {
-          setPointer(pointer._1, y + 1)
           MovementResult.OK
         }
         case _ => MovementResult.NOT_OK
@@ -97,8 +96,13 @@ class Control {
     }
   }
 
+  def goNorth() = setPointer(pointer._1 - 1, pointer._2)
+  def goSouth() = setPointer(pointer._1 + 1, pointer._2)
+  def goWest() = setPointer(pointer._1, pointer._2 - 1)
+  def goEast() = setPointer(pointer._1, pointer._2 + 1)
+
   private def check(x: Int, y: Int): Option[Int] = {
-    val num = input(x)(y)
+    val num = Input.grid(x)(y)
     if (!marks.contains(s"${x}-${y}")) {
       Some(num)
     } else {
@@ -110,16 +114,14 @@ class Control {
 object Control {
   var control: Control = new Control
 
-  def apply(input: Array[Array[Int]]) = {
+  def apply() = {
     control = new Control
-    control.input = input
     (control.setPointer _).tupled(control.pointer)
     control
   }
 
-  def apply(x: Int, y: Int, input: Array[Array[Int]]) = {
+  def apply(x: Int, y: Int) = {
     control = new Control
-    control.input = input
     (control.setPointer _).tupled((x, y))
     control
   }

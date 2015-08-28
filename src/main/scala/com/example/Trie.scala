@@ -6,3 +6,7 @@ package com.example
 class Trie {
 
 }
+
+object Trie {
+
+}
