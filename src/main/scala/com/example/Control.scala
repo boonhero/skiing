@@ -19,15 +19,29 @@ class Control {
   private var currentNumber: Int = 0;
   private var marks: Vector[String] = Vector[String]()
 
+  def copy() : Control = {
+    val control = new Control()
+    control.setPointer(pointer._1, pointer._2)
+    control.setCurrentNumber(this.currentNumber)
+    control.setMarks(this.marks)
+    control
+  }
+
   def getPointer() : (Int, Int) = pointer
   def setPointer(x: Int, y: Int): Unit = {
     pointer = (x, y)
-    println(s"setPointer x: ${x}")
     currentNumber = Input.grid(pointer._1)(pointer._2)
     marks = marks :+ s"${pointer._1}-${pointer._2}"
+    println(s"setPointer x: ${x} y: ${y} val: ${getCurrentNumber()}")
   }
   def getCurrentNumber() = currentNumber
+  def setCurrentNumber(currentNumber: Int): Unit = {
+    this.currentNumber = currentNumber
+  }
   def getMarks() = marks
+  def setMarks(marks: Vector[String]): Unit = {
+    this.marks = marks
+  }
 
   def checkNorth() = {
     val x = pointer._1
@@ -44,6 +58,10 @@ class Control {
       }
 
     }
+  }
+
+  def checkAllRoutes() = {
+    List(checkNorth(), checkSouth(), checkWest(), checkEast()).zipWithIndex
   }
 
   def checkSouth() = {
@@ -86,7 +104,6 @@ class Control {
     if (y == Input.grid(pointer._1).length - 1) {
       MovementResult.LIMIT
     } else {
-
       check(pointer._1, y + 1) match {
         case Some(num) if (num < currentNumber) => {
           MovementResult.OK
@@ -102,6 +119,7 @@ class Control {
   def goEast() = setPointer(pointer._1, pointer._2 + 1)
 
   private def check(x: Int, y: Int): Option[Int] = {
+    println(s"check x: ${x} y:${y}")
     val num = Input.grid(x)(y)
     if (!marks.contains(s"${x}-${y}")) {
       Some(num)
@@ -112,16 +130,16 @@ class Control {
 }
 
 object Control {
-  var control: Control = new Control
+  var control: Control = Control()
 
   def apply() = {
-    control = new Control
+    control = new Control()
     (control.setPointer _).tupled(control.pointer)
     control
   }
 
   def apply(x: Int, y: Int) = {
-    control = new Control
+    control = new Control()
     (control.setPointer _).tupled((x, y))
     control
   }
