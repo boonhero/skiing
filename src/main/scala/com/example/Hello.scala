@@ -1,8 +1,10 @@
 package com.example
 
-import scala.collection.immutable.Queue
 import scala.io.{BufferedSource, Source}
 
+/**
+ * Class that controls the problem.
+ */
 object Hello {
   val NORTH = 0
   val SOUTH = 1
@@ -90,15 +92,23 @@ object Hello {
 //      println()
 //    })
 
-//    Input.grid(0)(2)
-
-    //iterate
+    /**
+     * Criteria:
+     * higher number to lower number (i.e 5-4-3-2-1)
+     * every points passed through are marked so there's no turning back.
+     *
+     * Iterate over grid from left to right, top to bottom
+     * for each number, determine all possible routes (north, south, east, west)
+     * for every route that is accessible, call processQueue and reiterate until there are no possible routes left.
+     *
+     * if no possible routes left (okCount): determine length and drop => replace highest length and drop if condition passes.
+     */
     grids.zipWithIndex.foreach(row => row._1.zipWithIndex.foreach(col => {
 //      println(s"row: ${row._2}")
 //      println(s"col: ${col._2}")
 
      def processQueue(control: Control): Unit = {
-        //countOks
+        //collect routes that are accessible (lower than the current number)
         val routes = control.checkAllRoutes()
         val okRoutes = routes.filter(route =>  route._1 == MovementResult.OK)
         val okCount = okRoutes.count(route => route._1 == MovementResult.OK)
@@ -131,13 +141,8 @@ object Hello {
               }
             }
           }
-          case 1 => {
-            val newControl = control.copy()
-            startMoving(okRoutes(0)._2, newControl)
-            processQueue(newControl)
-          }
           case _ => {
-//            println("accessing okCounts more than 2...")
+//            println("create new controls for accessible pathways")
             okRoutes.foreach(f => {
               val newControl = control.copy()
               startMoving(f._2, newControl)

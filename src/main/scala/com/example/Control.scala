@@ -3,23 +3,38 @@ package com.example
 import scala.util.{Failure, Try}
 
 /**
- * Created by asales on 27/8/2015.
+ * Movement result
+ * OK - pathway accessible
+ * NOT_OK - condition failed (lower than the number or the path is already marked)
+ * LIMIT - when you are already at the edge of the grid.
  */
 object MovementResult extends Enumeration {
   type MovementResult = Value
   val OK, NOT_OK, LIMIT = Value
 }
 
+/**
+ * Grid board
+ */
 object Input {
   var grid: Array[Array[Int]] = Array[Array[Int]]()
 }
 
+/**
+ * Controls the your movement
+ */
 class Control {
+  // current position
   private var pointer = (0, 0)
+
+  // current position value
   private var currentNumber: Int = 0;
+
+  // passed thru pointers are put here in format (x-y)
   private var marks: Vector[String] = Vector[String]()
 
 
+  // deep copy this control
   def copy() : Control = {
     val control = new Control()
     control.setPointer(pointer._1, pointer._2)
@@ -44,6 +59,14 @@ class Control {
     this.marks = marks
   }
 
+  /**
+   * Determines which paths are accessible
+   * @return List of MovementResults
+   */
+  def checkAllRoutes() = {
+    List(checkNorth(), checkSouth(), checkWest(), checkEast()).zipWithIndex
+  }
+
   def checkNorth() = {
     val x = pointer._1
 
@@ -58,10 +81,6 @@ class Control {
       }
 
     }
-  }
-
-  def checkAllRoutes() = {
-    List(checkNorth(), checkSouth(), checkWest(), checkEast()).zipWithIndex
   }
 
   def checkSouth() = {
@@ -145,5 +164,4 @@ object Control {
     (control.setPointer _).tupled((x, y))
     control
   }
-
 }
