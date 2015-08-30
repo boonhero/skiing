@@ -24,11 +24,11 @@ object Hello {
     println("Hello, world!")
 
     //SEMI-REAL TEST
-//    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
-//    resBuilder.append("4 8 7 3\n")
-//    resBuilder.append("2 5 9 3\n")
-//    resBuilder.append("6 3 5 2\n")
-//    resBuilder.append("4 4 1 6\n")
+    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+    resBuilder.append("4 8 7 3\n")
+    resBuilder.append("2 5 9 3\n")
+    resBuilder.append("6 3 2 5\n")
+    resBuilder.append("4 4 1 6\n")
 
     //TEST PASSED
 //    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
@@ -64,9 +64,9 @@ object Hello {
 //    resBuilder.append("5 6 7 8\n")
 //    resBuilder.append("4 3 2 1\n")
 
-    //TEST ON GOING
-      val resBuilder: StringBuilder = new StringBuilder("4 4\n")
-      resBuilder.append("3 5 2\n")
+    //TEST PASSED
+//      val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+//      resBuilder.append("3 5 2\n")
 
     val res = resBuilder.toString()
     println(res)
@@ -93,12 +93,7 @@ object Hello {
       println(s"row: ${row._2}")
       println(s"col: ${col._2}")
 
-      val startQueue = collection.immutable.Queue[Control](Control(row._2, col._2))
-
-      Iterator.iterate(startQueue) { controlQueueObject =>
-        val (control, controlQueue) = controlQueueObject.dequeue
-
-        println(s"controlQueue.size(): ${controlQueue.size}" )
+     def processQueue(control: Control): Unit = {
         //countOks
         val routes = control.checkAllRoutes()
         val okRoutes = routes.filter(route =>  route._1 == MovementResult.OK)
@@ -119,25 +114,23 @@ object Hello {
                 (firstNumber - secondNumber) match {
                   case result if (result > highestDrop) => {
                     highestDrop = result
-
-                    //keep queuing
-                    controlQueue
                   }
                   case _ => {
-                    //keep queuing
-                    controlQueue
+                    //
+                    println("result is not highest drop")
                   }
                 }
               }
               case _ => {
-                //keep queuing
-                controlQueue
+                //
+                println("size is not greater than longest length")
               }
             }
           }
           case 1 => {
-            startMoving(okRoutes(0)._2, control)
-            controlQueue.enqueue(control)
+            val newControl = control.copy()
+            startMoving(okRoutes(0)._2, newControl)
+            processQueue(newControl)
           }
           case _ => {
             println("accessing okCounts more than 2...")
@@ -145,23 +138,22 @@ object Hello {
               val newControl = control.copy()
               startMoving(f._2, newControl)
               println(s"generated new control: ${newControl.toString()}")
-              controlQueue.enqueue(newControl)
+              processQueue(newControl)
             })
           }
-
-            //keep queuing
-            controlQueue
         }
-      }.takeWhile(!_.isEmpty).foreach(identity)
 
+        println(s"highestDrop: ${highestDrop}")
+        println(s"longestLength: ${longestLength}")
+        println()
+      }
 
-      println(s"highestDrop: ${highestDrop}")
-      println(s"longestLength: ${longestLength}")
-      println()
+      processQueue(Control(row._2, col._2))
+
     }))
 
-    println(s"final highestDrop: ${highestDrop}")
     println(s"final longestLength: ${longestLength}")
+    println(s"final highestDrop: ${highestDrop}")
     println()
   }
 
