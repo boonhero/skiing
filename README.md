@@ -1,7 +1,7 @@
 # skiing
 
 
-# to run the program
+### to run the program
 
 ./activator run
 
