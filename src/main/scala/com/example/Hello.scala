@@ -64,7 +64,7 @@ object Hello {
 //    resBuilder.append("5 6 7 8\n")
 //    resBuilder.append("4 3 2 1\n")
 
-    //TEST PASSED
+    //TEST ON GOING
       val resBuilder: StringBuilder = new StringBuilder("4 4\n")
       resBuilder.append("3 5 2\n")
 
