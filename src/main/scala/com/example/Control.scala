@@ -19,6 +19,7 @@ class Control {
   private var currentNumber: Int = 0;
   private var marks: Vector[String] = Vector[String]()
 
+
   def copy() : Control = {
     val control = new Control()
     control.setPointer(pointer._1, pointer._2)
@@ -127,6 +128,8 @@ class Control {
       None
     }
   }
+
+  override def toString = s"Control($pointer, $currentNumber, $marks)"
 }
 
 object Control {

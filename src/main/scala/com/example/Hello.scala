@@ -23,13 +23,50 @@ object Hello {
   def main(args: Array[String]): Unit = {
     println("Hello, world!")
 
-//    val urlSource: BufferedSource = Source.fromURL("http://s3-ap-southeast-1.amazonaws.com/geeks.redmart.com/coding-problems/map.txt")
-//    val res: String = urlSource.mkString
-    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
-    resBuilder.append("4 8 7 3\n")
-    resBuilder.append("2 5 9 3\n")
-    resBuilder.append("6 3 5 2\n")
-    resBuilder.append("4 4 1 6\n")
+    //SEMI-REAL TEST
+//    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+//    resBuilder.append("4 8 7 3\n")
+//    resBuilder.append("2 5 9 3\n")
+//    resBuilder.append("6 3 5 2\n")
+//    resBuilder.append("4 4 1 6\n")
+
+    //TEST PASSED
+//    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+//    resBuilder.append("4\n")
+//    resBuilder.append("3\n")
+//    resBuilder.append("2\n")
+//    resBuilder.append("1\n")
+
+    //TEST PASSED
+//      val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+//      resBuilder.append("1\n")
+//      resBuilder.append("2\n")
+//      resBuilder.append("3\n")
+//      resBuilder.append("4\n")
+
+//    //TEST PASSED
+//    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+//    resBuilder.append("4 5\n")
+//    resBuilder.append("3 6\n")
+//    resBuilder.append("2 7\n")
+//    resBuilder.append("1 8\n")
+
+     //TEST PASSED
+//      val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+//      resBuilder.append("1 2 3 4\n")
+
+    //TEST PASSED
+//    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+//    resBuilder.append("4 3 2 1\n")
+
+    //TEST PASSED
+//    val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+//    resBuilder.append("5 6 7 8\n")
+//    resBuilder.append("4 3 2 1\n")
+
+    //TEST PASSED
+      val resBuilder: StringBuilder = new StringBuilder("4 4\n")
+      resBuilder.append("3 5 2\n")
 
     val res = resBuilder.toString()
     println(res)
@@ -49,7 +86,7 @@ object Hello {
       println()
     })
 
-    Input.grid(0)(2)
+//    Input.grid(0)(2)
 
     //iterate
     grids.zipWithIndex.foreach(row => row._1.zipWithIndex.foreach(col => {
@@ -59,8 +96,8 @@ object Hello {
       val startQueue = collection.immutable.Queue[Control](Control(row._2, col._2))
 
       Iterator.iterate(startQueue) { controlQueueObject =>
-        val control = controlQueueObject.dequeue._1
-        val controlQueue = controlQueueObject.dequeue._2
+        val (control, controlQueue) = controlQueueObject.dequeue
+
         println(s"controlQueue.size(): ${controlQueue.size}" )
         //countOks
         val routes = control.checkAllRoutes()
@@ -73,10 +110,11 @@ object Hello {
             println(s"marks.size: ${marks.size}")
             marks.size match {
               case size if (size >= longestLength) => {
-                println(s"marks.sizes: ${marks.size}")
                 longestLength = size
                 val firstNumber: Int = findFromGrid(marks(0))
                 val secondNumber: Int = findFromGrid(marks(marks.size - 1))
+
+                println(s"(firstNumber - secondNumber): ${firstNumber}-${secondNumber}")
                 //get drop
                 (firstNumber - secondNumber) match {
                   case result if (result > highestDrop) => {
@@ -102,9 +140,11 @@ object Hello {
             controlQueue.enqueue(control)
           }
           case _ => {
+            println("accessing okCounts more than 2...")
             okRoutes.foreach(f => {
               val newControl = control.copy()
               startMoving(f._2, newControl)
+              println(s"generated new control: ${newControl.toString()}")
               controlQueue.enqueue(newControl)
             })
           }
@@ -112,7 +152,7 @@ object Hello {
             //keep queuing
             controlQueue
         }
-      }.takeWhile(! _.isEmpty).foreach(identity)
+      }.takeWhile(!_.isEmpty).foreach(identity)
 
 
       println(s"highestDrop: ${highestDrop}")
@@ -120,8 +160,8 @@ object Hello {
       println()
     }))
 
-    println(s"highestDrop: ${highestDrop}")
-    println(s"longestLength: ${longestLength}")
+    println(s"final highestDrop: ${highestDrop}")
+    println(s"final longestLength: ${longestLength}")
     println()
   }
 
