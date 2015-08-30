@@ -22,6 +22,7 @@ object Hello {
 
   def main(args: Array[String]): Unit = {
     println("Hello, world!")
+    val now = System.nanoTime
 
     //SEMI-REAL TEST
     val resBuilder: StringBuilder = new StringBuilder("4 4\n")
@@ -69,7 +70,7 @@ object Hello {
 //      resBuilder.append("3 5 2\n")
 
     val res = resBuilder.toString()
-    println(res)
+//    println(res)
 
     var perLine: Array[String] = res.split("\n")
     perLine = perLine.slice(1, perLine.length)
@@ -80,36 +81,36 @@ object Hello {
 
     Input.grid = grids
 
-    //print grid
-    grids.foreach(row => {
-      row.foreach(col => print(s"${col} "))
-      println()
-    })
+//    //print grid
+//    grids.foreach(row => {
+//      row.foreach(col => print(s"${col} "))
+//      println()
+//    })
 
 //    Input.grid(0)(2)
 
     //iterate
     grids.zipWithIndex.foreach(row => row._1.zipWithIndex.foreach(col => {
-      println(s"row: ${row._2}")
-      println(s"col: ${col._2}")
+//      println(s"row: ${row._2}")
+//      println(s"col: ${col._2}")
 
      def processQueue(control: Control): Unit = {
         //countOks
         val routes = control.checkAllRoutes()
         val okRoutes = routes.filter(route =>  route._1 == MovementResult.OK)
         val okCount = okRoutes.count(route => route._1 == MovementResult.OK)
-        println(s"okCount: ${okCount}")
+//        println(s"okCount: ${okCount}")
         okCount match {
           case 0 => {
             val marks = control.getMarks()
-            println(s"marks.size: ${marks.size}")
+//            println(s"marks.size: ${marks.size}")
             marks.size match {
               case size if (size >= longestLength) => {
                 longestLength = size
                 val firstNumber: Int = findFromGrid(marks(0))
                 val secondNumber: Int = findFromGrid(marks(marks.size - 1))
 
-                println(s"(firstNumber - secondNumber): ${firstNumber}-${secondNumber}")
+//                println(s"(firstNumber - secondNumber): ${firstNumber}-${secondNumber}")
                 //get drop
                 (firstNumber - secondNumber) match {
                   case result if (result > highestDrop) => {
@@ -117,13 +118,13 @@ object Hello {
                   }
                   case _ => {
                     //
-                    println("result is not highest drop")
+//                    println("result is not highest drop")
                   }
                 }
               }
               case _ => {
                 //
-                println("size is not greater than longest length")
+//                println("size is not greater than longest length")
               }
             }
           }
@@ -133,28 +134,29 @@ object Hello {
             processQueue(newControl)
           }
           case _ => {
-            println("accessing okCounts more than 2...")
+//            println("accessing okCounts more than 2...")
             okRoutes.foreach(f => {
               val newControl = control.copy()
               startMoving(f._2, newControl)
-              println(s"generated new control: ${newControl.toString()}")
+//              println(s"generated new control: ${newControl.toString()}")
               processQueue(newControl)
             })
           }
         }
 
-        println(s"highestDrop: ${highestDrop}")
-        println(s"longestLength: ${longestLength}")
-        println()
+//        println(s"highestDrop: ${highestDrop}")
+//        println(s"longestLength: ${longestLength}")
+//        println()
       }
 
       processQueue(Control(row._2, col._2))
-
     }))
 
     println(s"final longestLength: ${longestLength}")
     println(s"final highestDrop: ${highestDrop}")
     println()
+    val micros = (System.nanoTime - now) / 1000
+    println("%d microseconds".format(micros))
   }
 
   /**

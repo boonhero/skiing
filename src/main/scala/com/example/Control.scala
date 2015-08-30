@@ -33,7 +33,7 @@ class Control {
     pointer = (x, y)
     currentNumber = Input.grid(pointer._1)(pointer._2)
     marks = marks :+ s"${pointer._1}-${pointer._2}"
-    println(s"setPointer x: ${x} y: ${y} val: ${getCurrentNumber()}")
+//    println(s"setPointer x: ${x} y: ${y} val: ${getCurrentNumber()}")
   }
   def getCurrentNumber() = currentNumber
   def setCurrentNumber(currentNumber: Int): Unit = {
@@ -50,7 +50,6 @@ class Control {
     if (x == 0) {
       MovementResult.LIMIT
     } else {
-      println(s"x: ${x}")
       check(x - 1, pointer._2) match {
         case Some(num) if (num < currentNumber) => {
           MovementResult.OK
@@ -120,7 +119,7 @@ class Control {
   def goEast() = setPointer(pointer._1, pointer._2 + 1)
 
   private def check(x: Int, y: Int): Option[Int] = {
-    println(s"check x: ${x} y:${y}")
+//    println(s"check x: ${x} y:${y}")
     val num = Input.grid(x)(y)
     if (!marks.contains(s"${x}-${y}")) {
       Some(num)
