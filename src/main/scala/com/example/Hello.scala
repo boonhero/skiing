@@ -107,7 +107,7 @@ object Hello {
 //      println(s"row: ${row._2}")
 //      println(s"col: ${col._2}")
 
-     def processQueue(control: Control): Unit = {
+     def process(control: Control): Unit = {
         //collect routes that are accessible (lower than the current number)
         val routes = control.checkAllRoutes()
         val okRoutes = routes.filter(route =>  route._1 == MovementResult.OK)
@@ -146,7 +146,7 @@ object Hello {
               val newControl = control.copy()
               startMoving(f._2, newControl)
 //              println(s"generated new control: ${newControl.toString()}")
-              processQueue(newControl)
+              process(newControl)
             })
           }
         }
@@ -156,7 +156,7 @@ object Hello {
 //        println()
       }
 
-      processQueue(Control(row._2, col._2))
+      process(Control(row._2, col._2))
     }))
 
     println(s"final longestLength: ${longestLength}")
