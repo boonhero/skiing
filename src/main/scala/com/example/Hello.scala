@@ -11,9 +11,8 @@ object Hello {
   val WEST = 2
   val EAST = 3
 
-  var longestLength: Int = -1
-  var highestDrop: Int = -1
-
+  var longestLength = -1
+  var highestDrop = -1
 
   def startMoving(direction: Int, control: Control) = direction match {
     case NORTH => control.goNorth()
@@ -116,27 +115,15 @@ object Hello {
           case Nil => {
             val marks = control.getMarks()
 //            println(s"marks.size: ${marks.size}")
-            marks.size match {
-              case size if (size >= longestLength) => {
-                longestLength = size
-                val firstNumber: Int = findFromGrid(marks(0))
-                val secondNumber: Int = findFromGrid(marks(marks.size - 1))
+            if (marks.size >= longestLength) {
+              longestLength = marks.size
+              val firstNumber: Int = findFromGrid(marks(0))
+              val secondNumber: Int = findFromGrid(marks(marks.size - 1))
 
-//                println(s"(firstNumber - secondNumber): ${firstNumber}-${secondNumber}")
-                //get drop
-                (firstNumber - secondNumber) match {
-                  case result if (result > highestDrop) => {
-                    highestDrop = result
-                  }
-                  case _ => {
-                    //
-//                    println("result is not highest drop")
-                  }
-                }
-              }
-              case _ => {
-                //
-//                println("size is not greater than longest length")
+              //                println(s"(firstNumber - secondNumber): ${firstNumber}-${secondNumber}")
+              //get drop
+              if ((firstNumber - secondNumber) > highestDrop) {
+                highestDrop = (firstNumber - secondNumber)
               }
             }
           }
