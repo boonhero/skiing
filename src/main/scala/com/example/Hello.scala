@@ -111,10 +111,9 @@ object Hello {
         //collect routes that are accessible (lower than the current number)
         val routes = control.checkAllRoutes()
         val okRoutes = routes.filter(route =>  route._1 == MovementResult.OK)
-        val okCount = okRoutes.count(route => route._1 == MovementResult.OK)
 //        println(s"okCount: ${okCount}")
-        okCount match {
-          case 0 => {
+       okRoutes match {
+          case Nil => {
             val marks = control.getMarks()
 //            println(s"marks.size: ${marks.size}")
             marks.size match {
